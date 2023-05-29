@@ -1,1 +1,1 @@
-module.exports.APP_host = "http://localhost:7000/";
+module.exports.APP_host = "http://81.0.219.62:7000/";
