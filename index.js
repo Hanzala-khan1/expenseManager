@@ -22,6 +22,10 @@ app.use("/budget", require("./Routes/Budget.js"))
 app.use("/profile", require("./Routes/profile.js"))
 app.use("/categories", require("./Routes/Categories.js"))
 app.use("/currency", require("./Routes/currencyType.js"))
+app.use("/account", require("./Routes/account.js"))
+app.use("/transaction", require("./Routes/transaction.js"))
+
+
 
 ////////// image route //////////////
 app.use('/profile/images', express.static("./upload/images/"));
