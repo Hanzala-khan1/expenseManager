@@ -77,6 +77,61 @@ module.exports = {
             next(err)
         }
     },
+    //////////////// login request for user /////////////////
+    async loginAdmin(req, res, next) {
+        try {
+            const [rows] = await pool.promise().query("SELECT * FROM admin WHERE email=? AND password=?", [req.body.email, req.body.password]);
+
+            if (!rows.length) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Invalid email or password",
+                    status: 400,
+                    data: {}
+                });
+            }
+
+            const Admin = rows[0];
+            const token = await jwt.sign({ id: Admin.id }, "expoenseToken");
+
+            return res.status(200).send({
+                success: true,
+                message: "Logged in",
+                status: 200,
+                data: { Admin, token }
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+    ,
+    //////////////// request to create user /////////////////
+    async addAdmin(req, res, next) {
+        try {
+            createError
+            const checkuser = await User.findOne({ email: req.body.email })
+            if (checkuser) {
+                return next(createError(404, "A user with this email already exist"))
+            }
+            const salt = bcrypt.genSaltSync(10)
+            const hash = await bcrypt.hashSync(req.body.password, salt)
+            let user = new User({
+                ...req.body,
+                password: hash
+            })
+            await user.save()
+            let { password, ...info } = user;
+            return res.status(200).send({
+                success: true,
+                message: "registered",
+                status: 200,
+                data: info._doc
+            })
+        }
+        catch (error) {
+            next(error)
+        }
+    },
 
     async varifyOTP(req, res, next) {
         try {
@@ -191,15 +246,15 @@ module.exports = {
                 "select * from user user",
                 [req.body.phone]
             )
-            return res.status(403).json({
-                status: 403,
+            return res.status(200).json({
+                status: 200,
                 message: "list of all User",
                 data: user,
                 error: null
             });
 
         } catch (err) {
-
+            next(err)
         }
     },
     ////////////////////////////////////////////////////
@@ -209,15 +264,15 @@ module.exports = {
                 "select * from user user where id=?",
                 [req.params.id]
             )
-            return res.status(403).json({
-                status: 403,
+            return res.status(200).json({
+                status: 200,
                 message: "list of all User",
                 data: user,
                 error: null
             });
 
         } catch (err) {
-
+            next(err)
         }
     }
 }

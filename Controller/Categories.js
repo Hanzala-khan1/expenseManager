@@ -49,6 +49,35 @@ module.exports = {
             next(error)
         }
     },
+    async getCategoriesAll(req, res, next) {
+        try {
+
+            // const user_id = req.params.user_id
+            const [result] = await pool.promise().query(
+                "SELECT * FROM morecategories ",
+                [user_id]
+            );
+
+            if (result.length == 0) {
+                return res.status(200).json({
+                    status: 200,
+                    message: "No category to show ",
+                    data: result,
+                    error: "",
+                });
+            }
+            return res.status(200).json({
+                status: 200,
+                message: "secussfully",
+                data: result,
+                error: null
+            });
+
+
+        } catch (error) {
+            next(error)
+        }
+    },
 
     async updateCategories(req, res, next) {
         const { categoryIconId, categoryName, isUserceatedCategory, type } = req.body

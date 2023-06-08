@@ -11,15 +11,38 @@ module.exports = {
             );
 
 
-            const parsedResult = {
-                ...result[0],
-                currency_types: JSON.parse(result[0].currency_types)
-            };
+            // const parsedResult = {
+            //     ...result[0],
+            //     currency_types: JSON.parse(result[0].currency_types)
+            // };
 
             return res.status(200).json({
                 status: 200,
                 message: "Successfully fetched profile",
-                data: parsedResult,
+                data: result,
+                error: null
+            });
+        } catch (error) {
+            next(error);
+        }
+    },
+    async getProfileAll(req, res, next) {
+        try {
+            const user_id = req.params.user_id;
+            const [result] = await pool.promise().query(
+                "SELECT profile.*, JSON_OBJECT('code', c.code, 'name', c.name, 'name_plural', c.name_plural,'decimalDigits', c.decimalDigits, 'rounding', c.rounding,'symbol',c.symbol,'symbol_native',c.symbol_native,'created_at',c.created_at,'updated_at',c.updated_at) AS currency_types, user.name AS user_name FROM profile JOIN currencytype AS c ON profile.currencyTypeId = c.id JOIN user ON profile.user_id = user.id "
+            );
+
+
+            // const parsedResult = {
+            //     ...result[0],
+            //     currency_types: JSON.parse(result[0].currency_types)
+            // };
+
+            return res.status(200).json({
+                status: 200,
+                message: "Successfully fetched profile",
+                data: result,
                 error: null
             });
         } catch (error) {
