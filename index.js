@@ -49,10 +49,10 @@ app.use((error, req, res, next) => {
 ////////// sending front end route ////////////
 const __dirname1 = path.resolve();
 
-app.use(express.static(path.join(__dirname1, "Frontend/expense manager Admin/build")));
+app.use(express.static(path.join(__dirname1, "Frontend/build")));
 
 app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname1, "Frontend", "expense manager Admin", "build", "index.html"))
+    res.sendFile(path.resolve(__dirname1, "Frontend", "build", "index.html"))
 );
 
 
